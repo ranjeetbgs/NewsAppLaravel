@@ -222,7 +222,7 @@ class Blog extends Model
                 if(isset($data['is_voting_enable']) && $data['is_voting_enable']=='on'){
                     $data['is_voting_enable'] = 1;
                 }    
-                $data['created_by'] = Auth::user()->id;
+                $data['created_by'] = Auth::user() != null ? Auth::user()->id : 1;
                 $data['created_at'] = date('Y-m-d H:i:s'); 
                 $slug = \Helpers::createSlug($data['title'],'blog',$id,false);
                 $data['slug'] = $slug;

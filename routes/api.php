@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,22 @@ Route::middleware('apiauth:api')->group(function () {
     Route::post('blog-search', 'App\Http\Controllers\API\BlogAPIController@search');
     Route::post('add-feed', 'App\Http\Controllers\API\CategoryAPIController@doAddFeed');
     Route::post('add-vote', 'App\Http\Controllers\API\BlogAPIController@doVoteForOption');
-    Route::get('get-bookmarks', 'App\Http\Controllers\API\BlogAPIController@doGetBookmarks');    
+    Route::get('get-bookmarks', 'App\Http\Controllers\API\BlogAPIController@doGetBookmarks');   
+    
+    
+    Route::post('blog','App\Http\Controllers\Admin\BlogController@store');
 
+    Route::post('/send-notification/{id}', 'App\Http\Controllers\Admin\BlogController@sendNotification');
+
+});
+
+Route::get('test',function(){
+
+    $user = User::find(1);
+
+    return $user->createToken(1)->plainTextToken;
+
+    $user->api_token = \Helpers::generateApiToken();
+                    User::where('id',$user->id)->update(['api_token'=>$user->api_token]);
+    return $user->api_token;
 });
