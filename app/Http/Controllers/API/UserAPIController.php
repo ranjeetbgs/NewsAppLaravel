@@ -38,7 +38,7 @@ class UserAPIController extends Controller
         if ($validator->fails()) {
             return $this->sendError(__('lang.message_required_message'),$validator->errors());
         }
-        $user = User::where('email', $request->input('email'))->where('type','user')->first();
+        $user = User::where('email', $request->input('email'))->first();
         if($user){
             if($user->status==1){
                 if(auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])){
