@@ -3,7 +3,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"><a href="{{url('admin/dashboard')}}">{{__('lang.admin_dashboard')}}</a> /</span> {{__('lang.admin_profile')}}</h4>
     <div class="row">
-        <div class="col-xl">
+        <div class="col-8">
             <div class="card mb-4">
             <div class="card-body">
                 <form method="POST" id="update-record" action="{{url('admin/update-profile')}}" onsubmit="return validateProfile('update-record');" method="POST" enctype="multipart/form-data">
@@ -60,6 +60,34 @@
             </div>
             </div>
         </div>
+@if($row->type == 'admin')
+        <div class="col-4">
+            <div class="card mb-4">
+            <div class="card-body">
+                <form method="POST" id="update-record" action="{{url('admin/create-access-token')}}" onsubmit="return validateProfile('update-record');" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" value="{{$row->id}}">
+                    <div class="row">
+                     
+                            <div class="col-12 mb-3">
+                                <label class="form-label" for="name">API Access Token</label>
+                                <input type="text" class="form-control" disabled  name="api-token" value="{{$row->api_token}}"/>
+                            </div>
+                            
+                    
+                      
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                            <button type="submit" class="btn btn-primary mb-1 mb-sm-0 me-0 me-sm-1">Regenerate</button>
+                    </div>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+@endif
     </div>
 </div>
 @endsection

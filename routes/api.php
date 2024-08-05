@@ -58,13 +58,14 @@ Route::middleware('apiauth:api')->group(function () {
 
 });
 
-Route::get('test',function(){
+Route::post('test',function(){
 
     $user = User::find(1);
+    // dd($user->currentAccessToken());
+    // return $user->tokens->first()->token;
+    $user->tokens()->delete();
+    return $user->createToken('admin')->plainTextToken;
 
-    return $user->createToken(1)->plainTextToken;
 
-    $user->api_token = \Helpers::generateApiToken();
-                    User::where('id',$user->id)->update(['api_token'=>$user->api_token]);
-    return $user->api_token;
+   
 });

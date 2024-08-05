@@ -41,6 +41,8 @@ Route::middleware('admin-language:web')->group(function () {
             Route::get('/','App\Http\Controllers\Admin\DashboardController@index');
             Route::get('/profile', 'App\Http\Controllers\Admin\UserController@profile');
             Route::post('/update-profile', 'App\Http\Controllers\Admin\UserController@updateProfile');
+            
+            Route::post('/create-access-token', 'App\Http\Controllers\Admin\UserController@createAccessToken');
 
             /************************* Category Routing Starts Here **************************/
 
