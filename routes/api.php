@@ -40,10 +40,6 @@ Route::middleware('auth:sanctum')->group( function(){
     Route::get('/user', function (Request $request) {  return $request->user();});
     Route::post('/send-notification/{id}', 'App\Http\Controllers\Admin\BlogController@sendNotification');
 });
-  
-
-Route::post('/send-notification/{id}', 'App\Http\Controllers\Admin\BlogController@sendNotification');
-
 
 Route::middleware('apiauth:api')->group(function () {
     // Route::get('get-profile', 'App\Http\Controllers\API\UserAPIController@getProfile');
