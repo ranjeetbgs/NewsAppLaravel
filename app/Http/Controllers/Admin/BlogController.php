@@ -476,9 +476,9 @@ class BlogController extends Controller
             if($blog)
             {
                 $id = $blog->id;
-                return $this->sendResponse([$blog],'lang.message_notification_sent_successfully');
+                // return $this->sendResponse([$blog],'lang.message_notification_sent_successfully');
             }
-            return $this->sendError('blog not found');
+            // return $this->sendError('blog not found');
 
         }
 
