@@ -38,7 +38,7 @@ Route::post('add-analytics', 'App\Http\Controllers\API\BlogAPIController@addAnal
 
 Route::middleware('auth:sanctum')->group( function(){
     Route::get('/user', function (Request $request) {  return $request->user();});
-    Route::post('/send-notification/{id}', 'App\Http\Controllers\Admin\BlogController@sendNotification');
+    Route::post('/send-notification/{post_id}', 'App\Http\Controllers\Admin\BlogController@sendNotificationByPostId');
 });
 
 Route::middleware('apiauth:api')->group(function () {

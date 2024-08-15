@@ -460,6 +460,18 @@ class BlogController extends Controller
         }
     }
 
+    public function sendNotificationByPostId(Request $request, $post_id)
+    {
+        
+            $blog = Blog::where('post_id',$post_id)->first();
+            if(!$blog)
+            {
+                return $this->sendError('blog not found');
+               
+            }
+            
+            return $this->sendNotification($request, $blog->id);
+    }
 
     /**
      * Send Notification from storage.
@@ -469,19 +481,8 @@ class BlogController extends Controller
     **/
     public function sendNotification(Request $request, $id)
     { 
+        
         \Log::debug($id);
-        if(!is_numeric($id))
-        {
-            $blog = Blog::where('title',$id)->first();
-            if($blog)
-            {
-                $id = $blog->id;
-                // return $this->sendResponse([$blog],'lang.message_notification_sent_successfully');
-            }
-            // return $this->sendError('blog not found');
-
-        }
-
         $isApiRequest = $request->wantsJson();
         if(setting('one_signal_key')==''){
             if($isApiRequest) return $this->sendError(__('lang.message_one_signal_key_not_found'));
