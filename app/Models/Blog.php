@@ -149,6 +149,21 @@ class Blog extends Model
             $obj = new self;
             unset($data['_token']);
             // echo json_encode($data);exit;
+
+            if(isset($data['languages']) && $data['languages']!=''){
+                $languages = json_decode( $data['languages'], true);
+            }
+             unset($data['languages']);
+            $categories = json_decode( $data['categories'],true);
+
+            
+  
+                unset($data['categories']);
+            
+
+            
+
+
             if($id==0)
             {                
                 $category_id = "";
@@ -161,7 +176,8 @@ class Blog extends Model
                 $data['accent_code'] = setting('blog_accent');
                 $data['voice'] = setting('blog_voice');
                 if(isset($data['category_id']) && $data['category_id']!=''){
-                    $category_id = $data['category_id'];
+                    $category_id = is_string($data['category_id']) ? json_decode( $data['category_id']) :  $data['category_id'];
+      
                     unset($data['category_id']);
                 }
                 if(isset($data['sub_category_id']) && $data['sub_category_id']!=''){
@@ -242,6 +258,9 @@ class Blog extends Model
                         }
                     }
                     if(isset($category_id) && $category_id!=''){
+
+                        BlogCategory::where('blog_id',$entry_id)->delete();
+
                         foreach($category_id as $category_id_data){
                             $cat_arr = array(
                                 'category_id'=>$category_id_data,
@@ -251,6 +270,8 @@ class Blog extends Model
                             );
                             BlogCategory::insert($cat_arr);
                         }
+
+
                     }
                     if(isset($sub_category_id) && $sub_category_id!=''){
                         foreach($sub_category_id as $sub_category_id_data){                            
@@ -295,24 +316,19 @@ class Blog extends Model
                     }                   
                 }  
 
-                $languages = Language::where('status',1)->get();
+                 $translations = [];
                 foreach ($languages as $language) 
                 {
-                    $translation = array(
-                        'blog_id' =>$entry_id,
-                        'language_code' =>$language->code,
-                        'title' =>$data['title'],
-                        'tags' =>$data['tags'],
-                        'description' =>$data['description'],
-                        'seo_title' =>$data['seo_title'],
-                        'seo_keyword' =>$data['seo_keyword'],
-                        'seo_tag' =>$data['seo_tag'],
-                        'seo_description' =>$data['seo_description'],
-                        'created_at' =>date("Y-m-d H:i:s"),
-                    );
-                    BlogTranslation::insert($translation);
+                    $translations[] = [
+                                'language_code' => $language['language_code'],
+                                'blog_id' => $id,
+                                'description' => $language['description'],
+                                'title' => $language['title']
+                    ];
                 }
-                return ['status' => true, 'message' => config('constant.common.messages.success_add')];
+
+                BlogTranslation::upsert($translations, ['blog_id','language_code'],['title','description']);
+                return ['status' => true,'blog_id'=>$entry_id, 'message' => config('constant.common.messages.success_add')];
             }
             else
             {
@@ -324,7 +340,7 @@ class Blog extends Model
                 $option = "";
                 $button_name = "";
                 if(isset($data['category_id']) && $data['category_id']!=''){
-                    $category_id = $data['category_id'];
+                    $category_id = is_string($data['category_id']) ? json_decode( $data['category_id']) :  $data['category_id'];
                     unset($data['category_id']);
                 }
                 if(isset($data['sub_category_id']) && $data['sub_category_id']!=''){
@@ -416,17 +432,20 @@ class Blog extends Model
                         }
                     }
                     if(isset($category_id) && $category_id!=''){
+
+
+                        
+                        BlogCategory::where('blog_id',$id)->delete();
+
                         foreach($category_id as $category_id_data){
-                            $category = BlogCategory::where('category_id',$category_id_data)->where('blog_id',$id)->first();
-                            if(!$category){
+                            
                                 $cat_arr = array(
                                     'category_id'=>$category_id_data,
                                     'blog_id'=>$id,
-                                    'type'=>'category',
-                                    'created_at'=>date("Y-m-d H:i:s")
+                                    'type'=>'category'
                                 );
                                 BlogCategory::insert($cat_arr);
-                            }
+                            
                         }
                     }
                     if(isset($visibillity) && $visibillity!=''){
@@ -511,38 +530,78 @@ class Blog extends Model
                             }
                         }
                     }
-                }             
-                $languages = Language::where('status',1)->get();
+                }   
+                
+                
+                $translations = [];
                 foreach ($languages as $language) 
                 {
-                    $translate = BlogTranslation::where('language_code',$language->code)->where('blog_id',$id)->first();
-                    $translation = array(
-                        'blog_id' =>$id,
-                        'language_code' =>$language->code,
-                        'title' =>$data['title'],
-                        'tags' =>$data['tags'],
-                        'description' =>$data['description'],
-                        'seo_title' =>$data['seo_title'],
-                        'seo_keyword' =>$data['seo_keyword'],
-                        'seo_tag' =>$data['seo_tag'],
-                        'seo_description' =>$data['seo_description'],
-                        'created_at' =>date("Y-m-d H:i:s"),
-                    );
-                    if($translate){
-                        $translation['updated_at'] = date("Y-m-d H:i:s");
-                        BlogTranslation::where('id',$translate->id)->update($translation);
-                    }else{
-                        $translation['created_at'] = date("Y-m-d H:i:s");
-                        BlogTranslation::insert($translation);
-                    }
+                    $translations[] = [
+                                'language_code' => $language['language_code'],
+                                'blog_id' => $id,
+                                'description' => $language['description'],
+                                'title' => $language['title']
+                    ];
                 }
-                return ['status' => true, 'message' => config('constant.common.messages.success_update')];
+
+                BlogTranslation::upsert($translations, ['blog_id','language_code'],['title','description']);
+
+                Blog::syncCategories($id, $categories);
+
+                // dd($languages);
+                // foreach ($languages as $language) 
+                // {
+                //     $translate = BlogTranslation::where('language_code',$language->code)->where('blog_id',$id)->first();
+                //     $translation = array(
+                //         'blog_id' =>$id,
+                //         'language_code' =>$language->code,
+                //         'title' =>$data['title'],
+                //         'tags' =>$data['tags'],
+                //         'description' =>$data['description'],
+                //         'seo_title' =>$data['seo_title'],
+                //         'seo_keyword' =>$data['seo_keyword'],
+                //         'seo_tag' =>$data['seo_tag'],
+                //         'seo_description' =>$data['seo_description'],
+                //         'created_at' =>date("Y-m-d H:i:s"),
+                //     );
+                //     if($translate){
+                //         $translation['updated_at'] = date("Y-m-d H:i:s");
+                //         BlogTranslation::where('id',$translate->id)->update($translation);
+                //     }else{
+                //         $translation['created_at'] = date("Y-m-d H:i:s");
+                //         BlogTranslation::insert($translation);
+                //     }
+                //}
+                return ['status' => true, 'blog_id'=>$id, 'message' => config('constant.common.messages.success_update')];
             }
         } 
         catch (\Exception $e) 
         {
     		return ['status' => false, 'message' => $e->getMessage() . ' '. $e->getLine() . ' '. $e->getFile()];
     	}
+    }
+
+
+    private static function syncCategories($blog_id, $categories)
+    {
+        
+        $categoryIds = Category::whereIn('name',$categories)->pluck('id');
+
+        $blogCategories = [];
+
+        foreach($categoryIds as $categoryId)
+        {
+            $blogCategories[] = [
+                'category_id'=> $categoryId,
+                'blog_id'=> $blog_id,
+                'type'=>'category'
+            ];
+        }
+
+        BlogCategory::upsert($blogCategories,['category_id','blog_id'], ['category_id']);
+
+        
+
     }
 
     /**

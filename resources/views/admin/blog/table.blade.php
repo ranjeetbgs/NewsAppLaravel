@@ -22,7 +22,12 @@
                     <td>
                         @if($row->type=="post")
                         @if($row->image!='')
-                        <img src="{{ url('uploads/blog/80x45/'.$row->image->image)}}" class="me-75" height="45" width="80" alt="{{$row->title}}" onerror="this.onerror=null;this.src=`{{ asset('uploads/no-image.png') }}`" />
+
+                            @if(!$row->is_file)
+                            <img src="{{ $row->image->image }}" class="me-75" height="45" width="80" alt="{{$row->title}}"  />
+                            @else
+                            <img src="{{ url('uploads/blog/80x45/'.$row->image->image)}}" class="me-75" height="45" width="80" alt="{{$row->title}}"  />
+                            @endif
                         @else
                         <img src="{{ url('uploads/no-image.png')}}" class="me-75" height="45" width="80" alt="{{$row->title}}"/>
                         @endif

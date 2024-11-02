@@ -39,6 +39,8 @@ Route::post('add-analytics', 'App\Http\Controllers\API\BlogAPIController@addAnal
 Route::middleware('auth:sanctum')->group( function(){
     Route::get('/user', function (Request $request) {  return $request->user();});
     Route::post('/send-notification/{post_id}', 'App\Http\Controllers\Admin\BlogController@sendNotificationByPostId');
+
+    Route::resource('blogs', App\Http\Controllers\API\BlogController::class);
 });
 
 Route::middleware('apiauth:api')->group(function () {
@@ -51,9 +53,6 @@ Route::middleware('apiauth:api')->group(function () {
     Route::post('add-feed', 'App\Http\Controllers\API\CategoryAPIController@doAddFeed');
     Route::post('add-vote', 'App\Http\Controllers\API\BlogAPIController@doVoteForOption');
     Route::get('get-bookmarks', 'App\Http\Controllers\API\BlogAPIController@doGetBookmarks');   
-    
-    
-    Route::post('blog','App\Http\Controllers\Admin\BlogController@store');
 
    
 });

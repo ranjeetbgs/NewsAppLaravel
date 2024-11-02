@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('session_id')->nullable();
             $table->string('image')->nullable();
             $table->integer('order')->default(0);
+            $table->boolean('is_file')->default(0);
             $table->timestamps();
             $table->softDeletes();
             // Adding indexes
