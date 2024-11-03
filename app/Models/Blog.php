@@ -321,7 +321,7 @@ class Blog extends Model
                 {
                     $translations[] = [
                                 'language_code' => $language['language_code'],
-                                'blog_id' => $id,
+                                'blog_id' => $entry_id,
                                 'description' => $language['description'],
                                 'title' => $language['title']
                     ];
