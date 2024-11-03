@@ -82,7 +82,7 @@ class BlogController extends Controller
         try{
             $validated = $request->validated();
             $updated = Blog::addUpdate($request->all(),$id);
-            return $this->sendResponse($updated, '');
+           // return $this->sendResponse($updated, '');
             $blog = Blog::find($updated['blog_id']);
         // return $this->sendResponse($blog, '');
 
