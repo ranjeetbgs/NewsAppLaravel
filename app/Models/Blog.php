@@ -154,6 +154,8 @@ class Blog extends Model
                 $languages = json_decode( $data['languages'], true);
             }
              unset($data['languages']);
+
+             $categories = [];
              if(isset($data['categories']))
              {
                 $categories =  $data['categories'];
