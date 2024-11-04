@@ -42,16 +42,17 @@ class BlogController extends Controller
         if($is_post_exist) return $this->update($request, $is_post_exist->id);
 
         $added = Blog::addUpdate($request->all());
-
+        return $this->sendResponse($added, '');
         $blog = Blog::find($added['blog_id']);
-        // return $this->sendResponse($blog, '');
         
-        $blog->images()->saveMany([
-            
-                new BlogImage(['image' => $request->image,
-                'is_file' => false])
-            
-        ]);
+        if($request->image)
+        {
+            $blogImage = new BlogImage;
+                $blogImage->image = $request->image;
+                $blogImage->blog_id = $blog->id;
+                $blogImage->save();
+        }
+        
 
         if($added['status']) return $this->sendResponse($added, '');
         else return $this->sendError($added['message']);
@@ -82,18 +83,33 @@ class BlogController extends Controller
         try{
             $validated = $request->validated();
             $updated = Blog::addUpdate($request->all(),$id);
-           // return $this->sendResponse($updated, '');
             $blog = Blog::find($updated['blog_id']);
         // return $this->sendResponse($blog, '');
 
-        BlogImage::upsert([
-                            'image' => $request->image,
-                            'is_file' => false,
-                            'blog_id' => $blog->id,
-                        ], 
-                        ['blog_id','image'],['image']);
-                
-        
+        if($request->image)
+        {
+            
+            $blogImage = BlogImage::where('blog_id',$blog->id)->first();
+
+            if($blogImage) 
+            {
+                $blogImage->image = $request->image;
+                $blogImage->save();
+
+            }
+            else
+            {
+                $blogImage = new BlogImage;
+                $blogImage->image = $request->image;
+                $blogImage->blog_id = $blog->id;
+                $blogImage->save();
+            }
+
+           
+                    
+            
+        }
+       
          
         
             if($updated['status']){

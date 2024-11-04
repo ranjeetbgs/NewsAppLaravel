@@ -158,7 +158,7 @@ class Blog extends Model
              $categories = [];
              if(isset($data['categories']))
              {
-                $categories =  $data['categories'];
+                $categories =  is_string($data['categories']) ? json_decode( $data['categories']) : $data['categories'];
   
                 unset($data['categories']);
             
@@ -248,6 +248,8 @@ class Blog extends Model
                 $data['slug'] = $slug;
                 
                 $entry_id = $obj->insertGetId($data);
+
+                
                 
                 if($entry_id){
                     $image = BlogImage::where('session_id',Session::get('session_id'))->get();
@@ -420,6 +422,7 @@ class Blog extends Model
                     $data['created_at'] = date("Y-m-d H:i:s",strtotime($data['created_at']));
                 } 
                 $obj->where('id',$id)->update($data);
+                
                 if($id){
                     if(isset($sub_category_id) && $sub_category_id!=''){
                         foreach($sub_category_id as $sub_category_id_data){
@@ -452,6 +455,7 @@ class Blog extends Model
                             
                         }
                     }
+                    
                     if(isset($visibillity) && $visibillity!=''){
                         foreach($visibillity as $visibillity_data){
                             $visibillity_detail = BlogVisibility::where('visibility_id',$visibillity_data)->where('blog_id',$id)->first();
@@ -537,6 +541,7 @@ class Blog extends Model
                 }   
                 
                 
+                
                 $translations = [];
                 foreach ($languages as $language) 
                 {
@@ -547,9 +552,9 @@ class Blog extends Model
                                 'title' => $language['title']
                     ];
                 }
-
+                
                 BlogTranslation::upsert($translations, ['blog_id','language_code'],['title','description']);
-
+                
                 Blog::syncCategories($id, $categories);
 
                 // dd($languages);
@@ -576,6 +581,8 @@ class Blog extends Model
                 //         BlogTranslation::insert($translation);
                 //     }
                 //}
+
+                
                 return ['status' => true, 'blog_id'=>$id, 'message' => config('constant.common.messages.success_update')];
             }
         } 
