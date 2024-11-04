@@ -42,7 +42,6 @@ class BlogController extends Controller
         if($is_post_exist) return $this->update($request, $is_post_exist->id);
 
         $added = Blog::addUpdate($request->all());
-        return $this->sendResponse($added, '');
         $blog = Blog::find($added['blog_id']);
         
         if($request->image)

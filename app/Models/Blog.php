@@ -252,17 +252,17 @@ class Blog extends Model
                 
                 
                 if($entry_id){
-                    $image = BlogImage::where('session_id',Session::get('session_id'))->get();
-                    if(isset($image) && $image!=''){
-                        foreach($image as $image_data){                            
-                            $image_arr = array(
-                                'session_id'=>null,
-                                'blog_id'=>$entry_id,
-                                'updated_at'=>date("Y-m-d H:i:s")
-                            );
-                            BlogImage::where('id',$image_data->id)->update($image_arr);
-                        }
-                    }
+                    // $image = BlogImage::where('session_id',Session::get('session_id'))->get();
+                    // if(isset($image) && $image!=''){
+                    //     foreach($image as $image_data){                            
+                    //         $image_arr = array(
+                    //             'session_id'=>null,
+                    //             'blog_id'=>$entry_id,
+                    //             'updated_at'=>date("Y-m-d H:i:s")
+                    //         );
+                    //         BlogImage::where('id',$image_data->id)->update($image_arr);
+                    //     }
+                    // }
                     if(isset($category_id) && $category_id!=''){
 
                         BlogCategory::where('blog_id',$entry_id)->delete();
