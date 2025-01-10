@@ -608,7 +608,7 @@ class Helpers {
         $blog_images = BlogImage::where('blog_id',$blog_id)->get();
         if(count($blog_images)){
             foreach($blog_images as $images){
-                $images->image = url('uploads/blog/'.$folderName.'/'.$images->image);
+                $images->image = $images->image;//url('uploads/blog/'.$folderName.'/'.$images->image);
                 array_push($blog_image_arr,$images->image);
             }
         }
