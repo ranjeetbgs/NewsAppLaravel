@@ -71,6 +71,7 @@ class Category extends Model
             unset($data['_token']);
             if(isset($data['image']) && $data['image']!=''){
                 $uploadImage = \Helpers::uploadFiles($data['image'],'category/');
+                // dd( $uploadImage);
                 if($uploadImage['status']==true){
                     $data['image'] = $uploadImage['file_name'];
                 }

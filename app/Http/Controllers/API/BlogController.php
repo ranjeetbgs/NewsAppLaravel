@@ -16,9 +16,29 @@ class BlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+       $query = Blog::with(['images']);
+
+       if($request->category_id)
+       {
+
+            $category_id = $request->category_id;
+
+           $query = $query->whereHas("blog_category", function($q) use ($category_id)
+            {
+                return $q->where('category_id', '=', $category_id);
+            });
+       }
+    
+       //->where('status',1);
+       $limit = $request->has('limit') ? $request->limit : 10;
+
+       if($request->is_featured) $query = $query->where('is_featured',1);
+       // if($request->category_id) $query = $query->where('blog_category.category_id',4);
+
+       $blogs = $query->orderBy('id', 'desc')->paginate($limit);
+       return $this->sendResponse($blogs, '');
     }
 
     /**

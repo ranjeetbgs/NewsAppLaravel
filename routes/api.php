@@ -27,7 +27,7 @@ Route::match(['get', 'head'], 'epaper-list', 'App\Http\Controllers\API\SettingAP
 Route::match(['get', 'head'], 'live-news-list', 'App\Http\Controllers\API\SettingAPIController@getLiveNews');
 Route::match(['get', 'head'], 'localisation-list', 'App\Http\Controllers\API\SettingAPIController@getLocalization');
 Route::match(['get', 'head'], 'social-media-list', 'App\Http\Controllers\API\SettingAPIController@getSocialMedia');
-Route::match(['get', 'head'], 'ads-list', 'App\Http\Controllers\API\SettingAPIController@getAds');
+Route::match(['get', 'head'], 'ads-list', 'App\Http\Controllers\API\SettingAPIController@getAds'); 
 // Route::get('blog-list', 'App\Http\Controllers\API\BlogAPIController@list');  
 // Route::get('blog-detail/{id}', 'App\Http\Controllers\API\BlogAPIController@detail');  
 Route::match(['get', 'head'],'blog-list', 'App\Http\Controllers\API\BlogAPIController@getList');  
@@ -35,6 +35,8 @@ Route::match(['get', 'head'],'blog-detail/{id}', 'App\Http\Controllers\API\BlogA
 Route::post('update-token', 'App\Http\Controllers\API\UserAPIController@doUpdateToken');
 Route::post('get-notification-detail', 'App\Http\Controllers\API\UserAPIController@doGetNotificationDetail');
 Route::post('add-analytics', 'App\Http\Controllers\API\BlogAPIController@addAnalytics');
+
+Route::get('blogs', 'App\Http\Controllers\API\BlogController@index');
 
 Route::middleware('auth:sanctum')->group( function(){
     Route::get('/user', function (Request $request) {  return $request->user();});
