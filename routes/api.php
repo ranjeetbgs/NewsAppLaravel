@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group( function(){
     Route::get('/user', function (Request $request) {  return $request->user();});
     Route::post('/send-notification/{post_id}', 'App\Http\Controllers\Admin\BlogController@sendNotificationByPostId');
 
-    Route::resource('blogs', App\Http\Controllers\API\BlogController::class);
+    Route::resource('blogs', App\Http\Controllers\API\BlogController::class) ->except(['index']);
 });
 
 Route::middleware('apiauth:api')->group(function () {
