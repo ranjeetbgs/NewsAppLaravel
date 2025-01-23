@@ -31,13 +31,11 @@ class BlogController extends Controller
             });
        }
     
-       //->where('status',1);
        $limit = $request->has('limit') ? $request->limit : 10;
 
        if($request->is_featured) $query = $query->where('is_featured',1);
-       // if($request->category_id) $query = $query->where('blog_category.category_id',4);
 
-       $blogs = $query->orderBy('id', 'desc')->paginate($limit);
+       $blogs = $query->where('status',1)->orderBy('id', 'desc')->paginate($limit);
        return $this->sendResponse($blogs, '');
     }
 

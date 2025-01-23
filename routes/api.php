@@ -37,6 +37,7 @@ Route::post('get-notification-detail', 'App\Http\Controllers\API\UserAPIControll
 Route::post('add-analytics', 'App\Http\Controllers\API\BlogAPIController@addAnalytics');
 
 Route::get('blogs', 'App\Http\Controllers\API\BlogController@index');
+Route::get('categories', 'App\Http\Controllers\API\CategoryAPIController@index');
 
 Route::middleware('auth:sanctum')->group( function(){
     Route::get('/user', function (Request $request) {  return $request->user();});

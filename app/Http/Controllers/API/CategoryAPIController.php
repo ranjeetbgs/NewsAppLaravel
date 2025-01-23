@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Auth;
 use Validator;
 
+use App\Models\Category;
+
 use App\Models\UserFeed;
 use App\Models\User;
 
@@ -24,6 +26,16 @@ class CategoryAPIController extends Controller
         $this->request = $request;
         $this->language = $request->header('language-code') && $request->header('language-code') != '' ? $request->header('language-code') : 'en';
     }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+       $categories = Category::orderBy('order')->get();
+       return $this->sendResponse($categories, '');
+    }
+
 
     /**
      *  Add user feed
