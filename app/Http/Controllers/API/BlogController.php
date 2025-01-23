@@ -18,7 +18,7 @@ class BlogController extends Controller
      */
     public function index(Request $request)
     {
-       $query = Blog::with(['images']);
+       $query = Blog::with(['image']);
 
        if($request->category_id)
        {
