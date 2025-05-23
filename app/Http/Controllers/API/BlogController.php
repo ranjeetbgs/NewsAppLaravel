@@ -19,7 +19,7 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         
-       $query = Blog::with(['image']);
+       $query = Blog::with(['image','blog_category']);
 
        if($request->category_id)
        {
@@ -37,6 +37,7 @@ class BlogController extends Controller
        if($request->is_featured) $query = $query->where('is_featured',1);
 
        $blogs = $query->where('status',1)->orderBy('id', 'desc')->paginate($limit);
+       $blogs->setPath('https://www.newspepperapp.in/api/blogs');
        $blogs->appends($request->input());
        return $this->sendResponse($blogs, '');
     }

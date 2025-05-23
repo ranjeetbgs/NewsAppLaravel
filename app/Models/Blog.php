@@ -29,7 +29,7 @@ class Blog extends Model
         return $this->hasMany('App\Models\BlogVisibility',"blog_id","id")->with('visibility');
     }
     public function blog_category(){
-        return $this->hasMany('App\Models\BlogCategory',"blog_id","id")->where('type','category')->with('category');
+        return $this->hasOne('App\Models\BlogCategory',"blog_id","id")->where('type','category')->with('category');
     }
     public function blog_sub_category(){
         return $this->hasMany('App\Models\BlogCategory',"blog_id","id")->where('type','subcategory')->with('category');

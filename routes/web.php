@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/test',function(){
+    return "hello test";
+});
+
+Route::get('/disclaimer', function () {
+        return view('disclaimer');
+    });
+
 Route::get('/clear', function() {
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
@@ -19,6 +27,7 @@ Route::get('/clear', function() {
     Artisan::call('route:clear');
     return "Cache is cleared";
 });
+
 Route::middleware('admin-language:web')->group(function () {
     Route::get('/admin-login','App\Http\Controllers\Auth\LoginController@getLoginView')->middleware(['check.app.installation','check.app.code_verified']);
     Route::get('/admin-forget-password','App\Http\Controllers\Auth\ForgotPasswordController@forgetPassword')->middleware(['check.app.installation','check.app.code_verified']);
