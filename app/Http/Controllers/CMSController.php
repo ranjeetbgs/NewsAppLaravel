@@ -13,7 +13,7 @@ class CMSController extends Controller
     public function __invoke(Request $request,$slug)
     {
     	$content = CmsContent::where('page_title',$slug)->get()->first();
-    	 // dd($content);
+    	
         return view('cms',compact('content'));
     }
 }
