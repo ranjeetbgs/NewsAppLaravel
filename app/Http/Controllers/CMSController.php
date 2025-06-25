@@ -12,7 +12,9 @@ class CMSController extends Controller
      */
     public function __invoke(Request $request,$slug)
     {
-    	$content = CmsContent::where('page_title',$slug)->get()->first();
+    	$content = CmsContent::where('page_title',$slug)->where('status',true)->get()->first();
+
+    	if(!$content) return abort(404);
     	
         return view('cms',compact('content'));
     }

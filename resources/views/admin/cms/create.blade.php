@@ -82,7 +82,7 @@
 </div>
 <script type="text/javascript">
     ClassicEditor
-    .create(document.querySelector('#editor'), {
+    .create(document.querySelector('#editor-notuse'), {
         minHeight: '300px'
     })
     .then(editor => {
