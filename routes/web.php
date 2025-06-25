@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CMSController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +17,8 @@ Route::get('/test',function(){
     return "hello test";
 });
 
-Route::get('/disclaimer', function () {
-        return view('disclaimer');
-    });
+
+
 
 Route::get('/clear', function() {
     Artisan::call('cache:clear');
@@ -313,3 +313,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/unauthorized', function () {
     return view('unauthorized');
 })->name('unauthorized');
+
+
+
+Route::get('{slug}', CMSController::class)->where('slug', '([a-z\-\/]+)');

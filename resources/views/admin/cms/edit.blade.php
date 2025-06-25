@@ -20,10 +20,11 @@
                                     <input type="text" class="form-control" placeholder="{{__('lang.admin_title_placeholder')}}"  name="title" value="{{$row->title}}" onkeypress="setValue('meta_char',this.value);" />
                                 </div>
                             </div>
+                            
                             <div class="col-md-12">
                                 <div class="mb-3 display-inline-block width-74-percent">
                                     <label class="form-label" for="title">{{__('lang.admin_description')}}</label>
-                                    <textarea class="form-control" name="description" id="editor" name="{{__('lang.description')}}" value="{{$row->description}}" placeholder="{{__('lang.admin_description_placeholder')}}">{{$row->description}}</textarea>
+                                    <textarea class="form-control" name="description" id="editor" name="{{__('lang.description')}}" placeholder="{{__('lang.admin_description_placeholder')}}">{!! $row->description !!}</textarea>
                                 </div>
                             </div>
 
@@ -90,22 +91,12 @@
     </div>
 </div>
 <script type="text/javascript">
+    const { ClassicEditor, SourceEditing, Markdown } = CKEDITOR;
     ClassicEditor
-    .create(document.querySelector('#editor'), {
-        minHeight: '300px'
-    })
-    .then(editor => {
-        editorInstance = editor;
-        const prefilledValue = document.getElementById('editormeta').value;
-        editor.setData(prefilledValue);
-        // Set the prefilled value on keyup event
-        editor.model.document.on('change', () => {
-            const updatedValue = editor.getData();
-            var stripedHtml = updatedValue.replace(/<[^>]+>/g, '');
-            document.getElementById('editormeta').value = stripedHtml;
-        });
-    }).catch(error => {
-        console.log(error);
+    .create(document.querySelector('#editor-notusethis'), {
+        minHeight: '300px',
+        plugins: [ SourceEditing, Markdown, /* ... */ ],
+        toolbar: [ 'sourceEditing', /* ... */ ]
     });
 </script>
 @endsection
