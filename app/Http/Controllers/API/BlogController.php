@@ -24,7 +24,9 @@ class BlogController extends Controller
 
        if($request->s)
        {
-        $query = $query->where('title', 'like', '%' . $request->s . '%')->orWhere('description', 'like', '%' . $request->s . '%');
+        // $query = $query->where('title', 'like', '%' . $request->s . '%')->orWhere('description', 'like', '%' . $request->s . '%');
+
+        $query = $query->whereRaw("MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE)", [$request->s]);
        }
 
        if($request->category_id)
