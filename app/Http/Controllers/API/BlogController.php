@@ -19,7 +19,13 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         
+        
        $query = Blog::with(['image','blog_category']);
+
+       if($request->s)
+       {
+        $query = $query->where('title', 'like', '%' . $request->s . '%')->orWhere('description', 'like', '%' . $request->s . '%');
+       }
 
        if($request->category_id)
        {
