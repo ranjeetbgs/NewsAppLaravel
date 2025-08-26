@@ -54,6 +54,7 @@ class Kernel extends HttpKernel
         'permission' => \App\Http\Middleware\CheckPermissions::class,
         'admin-language' => \App\Http\Middleware\CheckAdminLanguage::class,
         'checkSubadminStatus' => \App\Http\Middleware\CheckSubadminStatus::class,
+        'app.auth' => \App\Http\Middleware\AppAuth::class,
     ];
 
     /**

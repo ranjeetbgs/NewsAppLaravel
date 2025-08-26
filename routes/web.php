@@ -14,7 +14,31 @@ use App\Http\Controllers\CMSController;
 |
 */
 Route::get('/test',function(){
-    return "hello test";
+
+    
+    return Str::random(60);
+
+
+            $messages[] = [
+                'to' => "ExponentPushToken[tZEREuOVHrbC2yrCzW9F8Z]",
+                'sound' => 'default',
+                'title' => "Test title",
+                'body' => "this is body",
+                'data' => "{}",
+            ];
+        
+
+        // Send to Expo push API
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Accept-Encoding' => 'gzip, deflate',
+            'Content-Type' => 'application/json',
+        ])->post('https://exp.host/--/api/v2/push/send', $messages);
+
+        return response()->json([
+            'status' => 'ok',
+            'expo_response' => $response->json()
+        ]);
 });
 
 

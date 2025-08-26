@@ -37,8 +37,9 @@ class ExpoNotification extends Notification
      */
     public function toExpoNotification($notifiable): ExpoMessage
     {
+
         return (new ExpoMessage())
-            ->to([$notifiable->expoTokens->value])
+            ->to(["$notifiable->expoTokens->value"])
             ->title('A beautiful title')
             ->body('This is a content')
             ->channelId('default');

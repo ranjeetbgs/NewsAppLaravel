@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
+use App\Notifications\ExpoNotification;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -60,14 +62,37 @@ Route::middleware('apiauth:api')->group(function () {
    
 });
 
-Route::post('test',function(){
+ 
+Route::middleware('app.auth')->group(function () {
 
-    $user = User::find(1);
-    // dd($user->currentAccessToken());
-    // return $user->tokens->first()->token;
-    $user->tokens()->delete();
-    return $user->createToken('admin')->plainTextToken;
+    Route::resource('devices', App\Http\Controllers\UserDeviceController::class);
+
+   Route::post('send-notification', 'App\Http\Controllers\UserDeviceController@sendNotification');   
 
 
-   
+
+Route::post('expo-push-notification', function(Request $request){
+
+    
+
+    $messages[] = [
+                'to' => $request->to,
+                'sound' => 'default',
+                'title' => $request->title,
+                'body' => $request->body,
+                'data' => $request->data,
+            ];
+        
+
+        // Send to Expo push API
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Accept-Encoding' => 'gzip, deflate',
+            'Content-Type' => 'application/json',
+        ])->post('https://exp.host/--/api/v2/push/send', $messages);
+
+        return $response->json();
+
+});
+
 });
