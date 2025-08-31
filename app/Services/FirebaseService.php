@@ -26,22 +26,28 @@ class FirebaseService
     /**
      * Send notification to a specific device token.
      */
-    public function sendNotification($deviceToken, $title, $body, array $data = [])
+    public function sendNotification($deviceToken, $title, $body, $image="", array $data = [])
     {
         // 1. Get access token from service account
         $accessToken = $this->googleClient->fetchAccessTokenWithAssertion()['access_token'];
 
         // 2. Prepare FCM message payload
-        $message = [
+        $payload = [
             'message' => [
                 'token' => $deviceToken,
                 'notification' => [
                     'title' => $title,
                     'body'  => $body
                 ],
+               
+
                 'data' => $data
             ]
         ];
+
+        if($image) $payload["message"]["android"] = [ "notification"=>[ "image"=>$image ] ];
+
+
 
         // 3. Send to FCM endpoint
         $response = $this->httpClient->post("/v1/projects/{$this->projectId}/messages:send", [
@@ -49,7 +55,7 @@ class FirebaseService
                 'Authorization' => "Bearer {$accessToken}",
                 'Content-Type'  => 'application/json'
             ],
-            'json' => $message
+            'json' => $payload
         ]);
 
         return json_decode($response->getBody(), true);

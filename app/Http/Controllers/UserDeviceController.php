@@ -107,13 +107,19 @@ public function sendNotification(Request $request)
 
   //       return response()->json($response);
 
-  $request->data =  $request->data ?  $request->data : ["key"=>"value"];
+  $request->data =  $request->data ?  $request->data : ["title"=>$request->title];
 
     $tokens = UserDevice::pluck('token')->toArray();
 
     $responses = [];
     foreach ($tokens as $token) {
-        $responses[$token] = $this->firebase->sendNotification($token, $request->title, $request->body, $request->data);
+        $responses[$token] = $this->firebase->sendNotification(
+            $token, 
+            $request->title, 
+            $request->body, 
+            image:$request->image,
+            data : $request->data
+        );
     }
     return response()->json($responses);
 
