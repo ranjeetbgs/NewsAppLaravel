@@ -118,7 +118,7 @@ public function sendNotification(Request $request)
             $request->title, 
             $request->body, 
             image:$request->image,
-            data : $request->data
+            data : json_decode($request->data, true)
         );
     }
     return response()->json($responses);
