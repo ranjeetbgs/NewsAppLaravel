@@ -510,7 +510,7 @@ class BlogController extends Controller
   "category" => $blog->blog_category->category->name,
 
     ];
-return $this->sendResponse($notificationData,'lang.message_notification_sent_successfully');
+// return $this->sendResponse($notificationData,'lang.message_notification_sent_successfully');
    
 
     $tokens = \App\Models\UserDevice::pluck('token')->toArray();
