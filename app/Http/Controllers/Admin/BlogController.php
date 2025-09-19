@@ -470,17 +470,9 @@ class BlogController extends Controller
 
     public function sendNotificationById(Request $request, $id)
     {
-        
-            $blog = Blog::with(['image','blog_category'])->find($id);
-           
-            if(!$blog)
-            {
-                return $this->sendError('blog not found');
-               
-            }
             
             // return $this->sendNotification($request, $blog->id);
-            return $this->sendFirebasePushNotification($blog);
+            return $this->sendFirebasePushNotification($id);
     }
 
     public function sendNotificationByPostId(Request $request, $post_id)
@@ -497,35 +489,14 @@ class BlogController extends Controller
             return $this->sendFirebasePushNotification($blog);
     }
 
-    public function sendFirebasePushNotification($blog)
+    public function sendFirebasePushNotification($id)
     {
 
-    $notificationData = [
-        "id" => "".$blog->id,
-"title" => $blog->title, 
-  "description" => $blog->description,
-  "source_link" => $blog->source_link,
-  "image" => @$blog->image->image ,
-  "created_at" => $blog->created_at,
-  "category" => $blog->blog_category->category->name,
+    $response = $this->firebase->sendNotificationAllByBlogId($id);
 
-    ];
-// return $this->sendResponse($notificationData,'lang.message_notification_sent_successfully');
-   
+    // dd($response);
 
-    $tokens = \App\Models\UserDevice::pluck('token')->toArray();
-
-    $responses = [];
-    foreach ($tokens as $token) {
-        $responses[$token] = $this->firebase->sendNotification(
-            $token, 
-            "For You", 
-            $blog->title, 
-            image:$notificationData["image"],
-            data : $notificationData
-        );
-    }
-    return response()->json($responses);
+    return response()->json($response);
     }
 
     /**
@@ -536,10 +507,10 @@ class BlogController extends Controller
     **/
     public function sendNotification(Request $request, $id)
     { 
+         $isApiRequest = $request->wantsJson();
         return $this->sendNotificationById($request, $id);
         
         \Log::debug($id);
-        $isApiRequest = $request->wantsJson();
         if(setting('one_signal_key')==''){
             if($isApiRequest) return $this->sendError(__('lang.message_one_signal_key_not_found'));
             return redirect()->back()->with('error',__('lang.message_one_signal_key_not_found'));

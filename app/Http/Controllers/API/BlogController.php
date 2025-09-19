@@ -10,9 +10,15 @@ use App\Models\BlogImage;
 
 use App\Http\Requests\Blog\StoreBlogRequest;
 use App\Http\Requests\Blog\UpdateBlogRequest;
+use App\Services\FirebaseService;
 
 class BlogController extends Controller
 {
+
+    public function __construct(FirebaseService $firebase)
+    {
+        $this->firebase = $firebase;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -82,7 +88,23 @@ class BlogController extends Controller
         }
         
 
-        if($added['status']) return $this->sendResponse($added, '');
+        if($added['status']) 
+        {
+
+            if($request->should_send_notification)
+            {
+
+             $this->firebase->sendNotificationAllByBlogId($blog->id);
+
+            }
+            
+
+
+     return $this->sendResponse($added, '');
+        }
+
+
+           
         else return $this->sendError($added['message']);
         
     }

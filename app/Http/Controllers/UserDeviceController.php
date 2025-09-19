@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserDeviceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Services\FirebaseService;
+use GuzzleHttp\Exception\RequestException;
 class UserDeviceController extends Controller
 {
 
@@ -113,13 +114,43 @@ public function sendNotification(Request $request)
 
     $responses = [];
     foreach ($tokens as $token) {
-        $responses[$token] = $this->firebase->sendNotification(
+$response = null;
+        try {
+
+        $response = $this->firebase->sendNotification(
             $token, 
             $request->title, 
             $request->body, 
             image:$request->image,
             data : json_decode($request->data, true)
         );
+
+    }
+
+    catch (RequestException $e) {
+    // 🔹 Network / HTTP errors
+    if ($e->hasResponse()) {
+        $statusCode = $e->getResponse()->getStatusCode();
+        $errorBody  = json_decode($e->getResponse()->getBody(), true);
+ \Log::warning("error body: {$e->getResponse()->getBody()}");
+        if ($statusCode === 404 || $statusCode === 401 || $statusCode === 400) {
+            // Token expired or not found
+            // ❌ Remove from DB
+            UserDevice::where('token', $token)->delete();
+            \Log::warning("FCM token expired: { $token}");
+        } else {
+            // Other FCM error
+            \Log::error("FCM Error {$statusCode}: " . json_encode($
+            ));
+        }
+    } else {
+        // 🔹 No response (timeout, DNS, connection issue)
+        \Log::error("FCM request failed: " . $e->getMessage());
+    }
+
+        }
+
+        $responses[] = $response;
     }
     return response()->json($responses);
 
