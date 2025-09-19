@@ -69,13 +69,15 @@ class BlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {   
-        $should_send_notification = $request['should_send_notification'];
-        unset($request['should_send_notification']);
+        
         $validated = $request->validated();
 
         $is_post_exist = Blog::where('post_id', $request->post_id)->first();
 
         if($is_post_exist) return $this->update($request, $is_post_exist->id);
+        
+        $should_send_notification = $request['should_send_notification'];
+        unset($request['should_send_notification']);
 
         $added = Blog::addUpdate($request->all());
         $blog = Blog::find($added['blog_id']);
@@ -131,7 +133,7 @@ class BlogController extends Controller
      */
     public function update(StoreBlogRequest $request, $id)
     { 
-        $should_send_notification = $request['should_send_notification'];
+        $should_send_notification = $request->should_send_notification;
         unset($request['should_send_notification']);
         try{
             $validated = $request->validated();
@@ -169,7 +171,7 @@ class BlogController extends Controller
                 if($should_send_notification=="1")
             {
 
-             $this->firebase->sendNotificationAllByBlogId($blog->id);
+             //$this->firebase->sendNotificationAllByBlogId($blog->id);
 
             }
                  return $this->sendResponse($updated, '');

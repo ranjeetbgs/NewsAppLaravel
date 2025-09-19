@@ -140,8 +140,7 @@ $response = null;
             \Log::warning("FCM token expired: { $token}");
         } else {
             // Other FCM error
-            \Log::error("FCM Error {$statusCode}: " . json_encode($
-            ));
+            \Log::error("FCM Error {$statusCode}: ");
         }
     } else {
         // 🔹 No response (timeout, DNS, connection issue)
