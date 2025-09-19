@@ -131,7 +131,7 @@ class BlogController extends Controller
      */
     public function update(StoreBlogRequest $request, $id)
     { 
-    
+        $should_send_notification = $request['should_send_notification'];
         unset($request['should_send_notification']);
         try{
             $validated = $request->validated();
@@ -166,7 +166,15 @@ class BlogController extends Controller
          
         
             if($updated['status']){
+                if($should_send_notification=="1")
+            {
+
+             $this->firebase->sendNotificationAllByBlogId($blog->id);
+
+            }
                  return $this->sendResponse($updated, '');
+
+
             }
             else{
                 return $this->sendError($added['message']);
