@@ -68,8 +68,9 @@ class BlogController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreBlogRequest $request)
-    {       
-        
+    {   
+        $should_send_notification = $request['should_send_notification'];
+        unset($request['should_send_notification']);
         $validated = $request->validated();
 
         $is_post_exist = Blog::where('post_id', $request->post_id)->first();
@@ -91,7 +92,7 @@ class BlogController extends Controller
         if($added['status']) 
         {
 
-            if($request->should_send_notification)
+            if($should_send_notification=="1")
             {
 
              $this->firebase->sendNotificationAllByBlogId($blog->id);
@@ -130,11 +131,13 @@ class BlogController extends Controller
      */
     public function update(StoreBlogRequest $request, $id)
     { 
+    
+        unset($request['should_send_notification']);
         try{
             $validated = $request->validated();
             $updated = Blog::addUpdate($request->all(),$id);
             $blog = Blog::find($updated['blog_id']);
-        // return $this->sendResponse($blog, '');
+        //return $this->sendResponse($blog, '');
 
         if($request->image)
         {

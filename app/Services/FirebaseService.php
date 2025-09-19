@@ -99,7 +99,7 @@ public function sendNotificationAllByBlogId($id)
     $blog = Blog::with(['image','blog_category'])->where('id',$id)->first();
             if(!$blog)
             {
-                return $this->sendError('blog not found');
+                return 'blog not found';
                
             }
 
