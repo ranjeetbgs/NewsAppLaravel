@@ -171,7 +171,7 @@ class BlogController extends Controller
                 if($should_send_notification=="1")
             {
 
-             //$this->firebase->sendNotificationAllByBlogId($blog->id);
+             $this->firebase->sendNotificationAllByBlogId($blog->id);
 
             }
                  return $this->sendResponse($updated, '');
