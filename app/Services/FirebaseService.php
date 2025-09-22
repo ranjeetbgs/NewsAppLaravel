@@ -118,6 +118,8 @@ public function sendNotificationAllByBlogId($id)
 
      $responses = [];
 
+     if(!$notificationData['image']) return "image not set";
+
     foreach($tokens as $token) {
         try {
 
