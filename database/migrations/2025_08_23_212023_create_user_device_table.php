@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('user_devices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('uuid')->unique();
             $table->string('language')->default('en');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('token')->unique();
+            $table->string('token')->unique()->nullable();
             $table->json('meta')->nullable();
             $table->timestamps();
             

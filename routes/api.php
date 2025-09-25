@@ -67,7 +67,9 @@ Route::middleware('app.auth')->group(function () {
 
     Route::resource('devices', App\Http\Controllers\UserDeviceController::class);
 
-   Route::post('send-notification', 'App\Http\Controllers\UserDeviceController@sendNotification');   
+   Route::post('send-notification', 'App\Http\Controllers\UserDeviceController@sendNotification');  
+
+   Route::post('set-read-blog', 'App\Http\Controllers\UserDeviceController@setReadBlog');  
 
 
 

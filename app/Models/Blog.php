@@ -19,6 +19,11 @@ class Blog extends Model
         'schedule_date',
     ];
 
+    public function user_devices()
+    {
+        return $this->belongsToMany('App\Models\UserDevice');
+    }
+
     public function images(){
         return $this->hasMany('App\Models\BlogImage',"blog_id","id");
     }

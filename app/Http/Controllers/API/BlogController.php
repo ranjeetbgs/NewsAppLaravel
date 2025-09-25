@@ -45,6 +45,19 @@ class BlogController extends Controller
                 return $q->where('category_id', '=', $category_id);
             });
        }
+
+
+       if($request->device_uuid)
+       {
+
+            $device = \App\Models\UserDevice::where('uuid', $request->device_uuid)->firstOrFail();
+
+            $query = $query->whereDoesntHave('user_devices', function ($q) use ($device) {
+    return $q->where('user_device_id', $device->id);
+});
+
+           
+       }
     
        $limit = $request->has('limit') ? $request->limit : 10;
 

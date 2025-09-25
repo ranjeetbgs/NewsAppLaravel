@@ -42,10 +42,11 @@ class UserDeviceController extends Controller
     public function store(Request $request)
     {
         
-        $request->validate(['token' => 'required|string']);
+        $request->validate(['uuid' => 'required|string']);
         UserDevice::updateOrCreate(
-            ['token' => $request->token,],
+            ['uuid' => $request->uuid,],
             [
+                // 'uuid' => $request->uuid,
                                     'token' => $request->token,
                                     'name' => $request->name,
                                     'language' => $request->language ? $request->language : 'en',
@@ -53,7 +54,7 @@ class UserDeviceController extends Controller
                                 ],
 
                             );
-    return response()->json(['message' => 'Token stored successfully']);
+    return response()->json(['message' => 'Device saved successfully']);
     }
 
     /**
@@ -79,6 +80,25 @@ class UserDeviceController extends Controller
     {
         //
     }
+
+
+    /**
+     * set blog as read for a particular device.
+     */
+    public function setReadBlog(Request $request)
+    {
+        $request->validate([
+            'uuid' => 'required|string',
+            'blog_id' => 'required|numeric'
+        ]);
+
+        $device = UserDevice::where('uuid', $request->uuid)->firstOrFail();
+        // dd($device);
+$device->blogs()->syncWithoutDetaching([$request->blog_id => ['read_time'=>$request->read_time]]);
+
+        return response()->json(['message' => 'read this bolg']);
+    }
+
 
     /**
      * Remove the specified resource from storage.
