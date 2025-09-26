@@ -114,7 +114,8 @@ public function sendNotificationAllByBlogId($id)
 
     ];
 
-     $tokens = UserDevice::pluck('token')->toArray();
+     // $tokens = UserDevice::pluck('token')->toArray();
+     $tokens = UserDevice::whereNotNull('token')->pluck('token')->toArray();
 
      $responses = [];
 

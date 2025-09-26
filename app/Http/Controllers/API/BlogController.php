@@ -73,8 +73,7 @@ if($device){
 
 if($request->notification_blog_id)
     {
-        $queryClone = clone $query;
-        $notification_blog = $queryClone->where('id',$request->notification_blog_id)->first();
+        $notification_blog = Blog::with(['image','blog_category'])->where('id',$request->notification_blog_id)->first();
         $blogs = $query->where('id','!=',$request->notification_blog_id)->orderBy('id', 'desc')->paginate($limit);
         if($notification_blog)
         {

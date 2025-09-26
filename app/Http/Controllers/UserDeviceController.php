@@ -105,7 +105,7 @@ $device->blogs()->syncWithoutDetaching([$request->blog_id => ['read_time'=>$requ
      */
     public function destroy(UserDevice $userDevice)
     {
-        //
+        dd($userDevice);
     }
 
 
@@ -130,7 +130,9 @@ public function sendNotification(Request $request)
 
   $request->data =  $request->data ?  $request->data : ["title"=>$request->title];
 
-    $tokens = UserDevice::pluck('token')->toArray();
+    $tokens = UserDevice::whereNotNull('token')->pluck('token')->toArray();
+
+    
 
     $responses = [];
     foreach ($tokens as $token) {
