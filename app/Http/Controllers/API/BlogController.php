@@ -50,12 +50,16 @@ class BlogController extends Controller
        if($request->device_uuid)
        {
 
-            $device = \App\Models\UserDevice::where('uuid', $request->device_uuid)->firstOrFail();
+            $device = \App\Models\UserDevice::where('uuid', $request->device_uuid)->first();
+if($device){
 
-            $query = $query->whereDoesntHave('user_devices', function ($q) use ($device) {
+    $query = $query->whereDoesntHave('user_devices', function ($q) use ($device) {
     return $q->where('user_device_id', $device->id);
 });
 
+
+}
+            
            
        }
     
@@ -63,7 +67,27 @@ class BlogController extends Controller
 
        if($request->is_featured) $query = $query->where('is_featured',1);
 
-       $blogs = $query->where('status',1)->orderBy('id', 'desc')->paginate($limit);
+       $query = $query->where('status',1);
+
+      
+
+if($request->notification_blog_id)
+    {
+        $queryClone = clone $query;
+        $notification_blog = $queryClone->where('id',$request->notification_blog_id)->first();
+        $blogs = $query->where('id','!=',$request->notification_blog_id)->orderBy('id', 'desc')->paginate($limit);
+        if($notification_blog)
+        {
+         $blogs->prepend($notification_blog);
+        }
+    
+        
+       }
+       else
+       {
+         $blogs = $query->orderBy('id', 'desc')->paginate($limit);
+       }
+
        $blogs->setPath('https://www.newspepperapp.in/api/blogs');
        $blogs->appends($request->input());
        return $this->sendResponse($blogs, '');
